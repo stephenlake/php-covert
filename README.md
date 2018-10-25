@@ -6,7 +6,7 @@
     Run namespaced methods as background PHP tasks from your code as system processes.
 </h6>
 
-<br><br>
+<br>
 
 # PHP Covert
 Readme to be updated soon.
