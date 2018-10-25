@@ -1,5 +1,5 @@
 <h6 align="center">
-    <img src="https://github.com/stephenlake/php-covert/blob/master/docs/assets/php-covert.png" width="450"/>
+    <img src="https://github.com/stephenlake/php-covert/blob/master/docs/assets/php-covert.png" width="300"/>
 </h6>
 
 <h6 align="center">
@@ -9,3 +9,4 @@
 <br><br>
 
 # PHP Covert
+Readme to be updated soon.
