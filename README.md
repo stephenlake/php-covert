@@ -3,7 +3,7 @@
 </h6>
 
 <h6 align="center">
-    Run namespaced methods as background PHP tasks from your code as system processes.
+    Easily execute namespaced PHP methods in the background as a system process with no external dependencies for Linux, Mac and Windows.
 </h6>
 
 <br>
