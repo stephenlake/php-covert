@@ -3,7 +3,7 @@
   "description": "Process background PHP tasks.",
   "keywords": ["process", "background task", "nohup", "pid"],
   "license": "MIT",
-  "type": "project",
+  "type": "library",
   "require-dev": {
     "phpunit/phpunit": "~7.0"
   },
