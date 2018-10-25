@@ -12,8 +12,6 @@ class Operation
 {
     private $class;
     private $className;
-    private $classPath;
-    private $method;
     private $autoloadPath;
     private $process;
 
@@ -35,15 +33,13 @@ class Operation
 
     public function execute($method)
     {
-        $this->method = $method;
-
-        if (!method_exists($this->class, $this->method)) {
+        if (!method_exists($this->class, $method)) {
             throw new MethodNotFoundException("$method does not exist on class $class");
         }
 
         $autolod = "require('$this->autoloadPath');";
         $include = "use $this->classSpace;";
-        $newInst = "(new $this->className" . '())->' . "$this->method" . '();';
+        $newInst = "(new $this->className" . '())->' . "$method" . '();';
 
         $this->process = Nohup::run("php -r \"$autolod $include $newInst\"");
 
