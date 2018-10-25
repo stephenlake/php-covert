@@ -9,4 +9,6 @@
 <br>
 
 # PHP Covert
-Readme to be updated soon.
+**PHP Covert** makes running background tasks (including namespaced methods) in PHP a piece of cake. Plan your operation and execute it instantly as a background process, returning the process ID for your control.
+
+Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
