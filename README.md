@@ -27,11 +27,8 @@ $operation = new Operation();
 $operation->plan(\Your\Lengthy\Tasks\SomeSuperLengthyTask::class);
 $operation->execute('LengthyClassMethodName');
 ```
-That's it. Your task is now running in the background as a process. Get the process ID with `$operation->getProcessID()`. Check out the documentation for further usage and features.
-
-#### See [documentation](https://stephenlake.github.io/php-covert) (Coming Soon!) for usage.
+That's it. Your task is now running in the background as a process. Get the process ID with `$operation->getProcessID()`. Check out the [documentation](https://stephenlake.github.io/php-covert) for further usage and features.
 
 ## License
 
 This library is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
-
