@@ -16,10 +16,9 @@ Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
 ## What?
 ```php
 use Covert\Operation;
-use Your\Lengthy\Tasks\SomeSuperLengthyTask;
 
 $operation = new Operation();
-$operation->plan(SomeSuperLengthyTask::class);
+$operation->plan(\Your\Lengthy\Tasks\SomeSuperLengthyTask::class);
 $operation->execute('LengthyClassMethodName');
 ```
 That's it. Your process is now running in the background.
