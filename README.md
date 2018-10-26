@@ -21,4 +21,4 @@ $operation = new Operation();
 $operation->plan(\Your\Lengthy\Tasks\SomeSuperLengthyTask::class);
 $operation->execute('LengthyClassMethodName');
 ```
-That's it. Your process is now running in the background.
+That's it. Your task is now running in the background as a process. Get the process ID with `$operation->getProcessID()`. Check out the documentation for further usage and features.
