@@ -13,7 +13,13 @@
 
 Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
 
-## What?
+## Getting Started
+Install the package via composer.
+
+    composer require stephenlake/php-covert-shovel
+
+Try it!
+
 ```php
 use Covert\Operation;
 
