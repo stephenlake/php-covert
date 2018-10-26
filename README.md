@@ -16,7 +16,7 @@ Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
 ## Getting Started
 Install the package via composer.
 
-    composer require stephenlake/php-covert-shovel
+    composer require stephenlake/php-covert
 
 Try it!
 
