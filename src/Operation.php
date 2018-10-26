@@ -40,8 +40,9 @@ class Operation
         $autolod = "require('$this->autoloadPath');";
         $include = "use $this->classSpace;";
         $newInst = "(new $this->className" . '())->' . "$method" . '();';
+        $finish  = "exit(0);";
 
-        $this->process = Nohup::run("php -r \"$autolod $include $newInst\"");
+        $this->process = Nohup::run("php -r \"$autolod $include $newInst $finish\"");
 
         return $this;
     }
