@@ -6,7 +6,7 @@
     Easily execute namespaced PHP methods in the background as a system process for Linux, Mac and Windoze.
 </h6>
 
-### Note: This project is brand new and under active development. Release and documentation will be published within the next few weeks.
+### Note: This project is brand new and under active development - it is NOT ready for production use and no methods have been finalised. Release and documentation will be published within the next few weeks.
 
 <br>
 
