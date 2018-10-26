@@ -16,8 +16,5 @@
     "psr-4": {
       "Covert\\Tests\\": "tests/"
     }
-  },
-  "require": {
-    "composer/composer": "^1.7"
   }
 }

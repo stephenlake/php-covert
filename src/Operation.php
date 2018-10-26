@@ -2,7 +2,6 @@
 
 namespace Covert;
 
-use Composer\Factory;
 use Covert\Internals\Exceptions\ClassNotFoundException;
 use Covert\Internals\Exceptions\MethodNotFoundException;
 use Covert\Internals\Nohup;
@@ -15,7 +14,10 @@ class Operation
     private $autoloadPath;
     private $process;
 
-    public function plan($class)
+    const KEEP_ALIVE = 0;
+    const FREE_WHEN_DONE = 1;
+
+    public function plan($class, $after = 1)
     {
         $this->class = $class;
 
@@ -23,7 +25,11 @@ class Operation
             throw new ClassNotFoundException("$class does not exist");
         }
 
-        $this->autoloadPath = dirname(Factory::getComposerFile()) . '/vendor/autoload.php';
+        $this->autoloadPath = realpath(__DIR__ . '/../../../autoload.php');
+
+        if (!file_exists($this->autoloadPath)) {
+            throw new Exception("Seems that we can't find your composer autoload.php file, are you using a custom setup?");
+        }
 
         $this->classSpace = $class;
         $this->className = join('', array_slice(explode('\\', $class), -1));
@@ -40,8 +46,9 @@ class Operation
         $autolod = "require('$this->autoloadPath');";
         $include = "use $this->classSpace;";
         $newInst = "(new $this->className" . '())->' . "$method" . '();';
+        $command = "php -r \"$autolod $include $newInst\"";
 
-        $this->process = Nohup::run("php -r \"$autolod $include $newInst\"");
+        $this->process = Nohup::run($command);
 
         return $this;
     }
