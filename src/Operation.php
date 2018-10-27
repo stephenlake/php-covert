@@ -48,24 +48,15 @@ class Operation
             throw new MethodNotFoundException("$method does not exist on class $class");
         }
 
-        $autolod = "require('$this->autoloadPath');";
-        $include = "use $this->classSpace;";
-        $include .= "use Covert\\Operation;";
+        $theCommand = 'php -r "';
+        $theCommand .= "require('$this->autoloadPath');";
+        $theCommand .= "use Covert\\Internals\\InternalOperation;";
+        $theCommand .= "new InternalOperation('$this->classSpace', '$method', '$this->id');";
+        $theCommand .= '"';
 
-        $newInst = "(new $this->className" . '())->' . "$method" . '();';
-
-        $command = "php -r \"$autolod $include $newInst (new Operation())->terminate('{$this->id}'); exit(0);\"";
-
-        $this->process = Nohup::run($command);
+        $this->process = Nohup::run($theCommand);
 
         $this->addProcess($this->process);
-
-        return $this;
-    }
-
-    public function as($name)
-    {
-        $this->name = $name;
 
         return $this;
     }
@@ -114,21 +105,27 @@ class Operation
     {
         $content = $this->fileStore->read();
 
-        $content['processes']["{$this->id}"] = [
+        $data = [
           'pid'   => $process->getPid(),
           'name'  => $this->name,
           'start' => time(),
           'state' => 'active'
         ];
 
-        $this->fileStore->write($content);
+        if ($process->isRunning()) {
+            $content['processes']["{$this->id}"] = $data;
+
+            $this->fileStore->write($content);
+        }
+
+        return;
     }
 
     private function removeProcess($id)
     {
         $content = $this->fileStore->read();
 
-        $content['processes']["{$id}"] = '';
+        unset($content['processes']["{$id}"]);
 
         $this->fileStore->write($content);
     }
@@ -137,19 +134,29 @@ class Operation
     {
         $content = $this->fileStore->read();
 
-        $pid = $content['processes']["$id"]['pid'];
+        if (isset($content['processes']["$id"]['pid'])) {
+            $pid = $content['processes']["$id"]['pid'];
 
-        $process = Process::loadFromPid($pid);
-        $process->stop();
+            $process = Process::loadFromPid($pid);
+            $process->stop();
 
-        $this->removeProcess($id);
+            $this->removeProcess($id);
+        }
     }
 
-    public function history()
+    public function list()
     {
         $content = $this->fileStore->read();
 
-        return $content['processes'];
+        foreach ($content['processes'] as $id => $process) {
+            $process = Process::loadFromPid($process['pid']);
+
+            if (!$process->isRunning()) {
+                $this->terminate($id);
+            }
+        }
+
+        return $this->fileStore->read()['processes'];
     }
 
     public function removeAll()
@@ -157,7 +164,10 @@ class Operation
         $content = $this->fileStore->read();
 
         foreach ($content['processes'] as $id => $value) {
-            $this->terminate($id);
+            try {
+                $this->terminate($id);
+            } catch (\Exception $e) {
+            }
         }
 
         return $this->history();

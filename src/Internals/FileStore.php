@@ -35,9 +35,7 @@ class FileStore
 
     public function read()
     {
-        $this->content = json_decode(file_get_contents($this->path), true);
-
-        return $this->content;
+        return json_decode(file_get_contents($this->path), true);
     }
 
     public function exists()
