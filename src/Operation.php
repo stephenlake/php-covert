@@ -4,9 +4,8 @@ namespace Covert;
 
 use Covert\Internals\Exceptions\ClassNotFoundException;
 use Covert\Internals\Exceptions\MethodNotFoundException;
-use Covert\Internals\Nohup;
-use Covert\Internals\Process;
 use Covert\Internals\FileStore;
+use Covert\Internals\OperatingSystem;
 
 class Operation
 {
@@ -54,11 +53,17 @@ class Operation
         $theCommand .= "new InternalOperation('$this->classSpace', '$method', '$this->id');";
         $theCommand .= '"';
 
-        $this->process = Nohup::run($theCommand);
+        if (substr(strtoupper(PHP_OS), 0, 3) === 'WIN') {
+            $theCommand .= "&";
+        } else {
+            $theCommand .= " > /dev/null 2>&1 & echo $!";
+        }
 
-        $this->addProcess($this->process);
+        $this->process = (int) shell_exec($theCommand);
+        
+        $this->addProcess();
 
-        return $this;
+        return $this->process;
     }
 
     public function autoloadFrom($autoloadPath)
@@ -72,53 +77,20 @@ class Operation
         return $this;
     }
 
-    public function isRunning()
-    {
-        return $this->process->isRunning();
-    }
-
-    public function getProcess()
-    {
-        return $this->process;
-    }
-
-    public function getProcessID()
-    {
-        return $this->process->getPid();
-    }
-
-    public function loadFromProcessID($processId)
-    {
-        $this->process = Process::loadFromPid($processId);
-
-        return $this->getProcess();
-    }
-
-    public function stop()
-    {
-        $this->process->stop();
-
-        return $this;
-    }
-
-    private function addProcess($process)
+    private function addProcess()
     {
         $content = $this->fileStore->read();
 
         $data = [
-          'pid'   => $process->getPid(),
+          'pid'   => $this->process,
           'name'  => $this->name,
           'start' => time(),
           'state' => 'active'
         ];
 
-        if ($process->isRunning()) {
-            $content['processes']["{$this->id}"] = $data;
+        $content['processes']["{$this->id}"] = $data;
 
-            $this->fileStore->write($content);
-        }
-
-        return;
+        $this->fileStore->write($content);
     }
 
     private function removeProcess($id)
@@ -137,8 +109,9 @@ class Operation
         if (isset($content['processes']["$id"]['pid'])) {
             $pid = $content['processes']["$id"]['pid'];
 
-            $process = Process::loadFromPid($pid);
-            $process->stop();
+            if ($this->isRunning($pid)) {
+                $this->stop($pid);
+            }
 
             $this->removeProcess($id);
         }
@@ -149,9 +122,7 @@ class Operation
         $content = $this->fileStore->read();
 
         foreach ($content['processes'] as $id => $process) {
-            $process = Process::loadFromPid($process['pid']);
-
-            if (!$process->isRunning()) {
+            if ($this->isRunning($process['pid'])) {
                 $this->terminate($id);
             }
         }
@@ -170,6 +141,27 @@ class Operation
             }
         }
 
-        return $this->history();
+        return $this->list();
+    }
+
+    public function isRunning($pid)
+    {
+        if (substr(strtoupper(PHP_OS), 0, 3) === 'WIN') {
+            $res = array_filter(explode(" ", shell_exec("wmic process get processid | find \"{$pid}\"")));
+            return count($res) > 0 && $pid == reset($res);
+        } else {
+            return !!posix_getsid($pid);
+        }
+    }
+
+    public function stop($pid)
+    {
+        if (substr(strtoupper(PHP_OS), 0, 3) === 'WIN') {
+            $cmd = "taskkill /pid {$pid} -t -f";
+        } else {
+            $cmd = "kill -9 {$pid}";
+        }
+
+        shell_exec($cmd);
     }
 }
