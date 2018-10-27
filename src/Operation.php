@@ -51,19 +51,19 @@ class Operation
         $theCommand .= "require('$this->autoloadPath');";
         $theCommand .= "use Covert\\Internals\\InternalOperation;";
         $theCommand .= "new InternalOperation('$this->classSpace', '$method', '$this->id');";
-        $theCommand .= '"';
+        $theCommand .= '" ';
 
         if (substr(strtoupper(PHP_OS), 0, 3) === 'WIN') {
             $theCommand .= "&";
         } else {
-            $theCommand .= " > /dev/null 2>&1 & echo $!";
+            $theCommand .= "> /dev/null 2>&1 & echo $!";
         }
 
         $this->process = (int) shell_exec($theCommand);
-        
+
         $this->addProcess();
 
-        return $this->process;
+        return $this;
     }
 
     public function autoloadFrom($autoloadPath)
@@ -122,7 +122,7 @@ class Operation
         $content = $this->fileStore->read();
 
         foreach ($content['processes'] as $id => $process) {
-            if ($this->isRunning($process['pid'])) {
+            if (!$this->isRunning($process['pid'])) {
                 $this->terminate($id);
             }
         }
