@@ -11,7 +11,7 @@
 # PHP Covert
 **PHP Covert** makes running background tasks (including namespaced methods) in PHP a piece of cake without the need to install external software. Plan your operation and execute it instantly as a background process.
 
-### Why not use `shell_exec`?
+### What? How?
 The goal is to run project code - to instantiate an actual class and execute long-running code as a background task, `shell_exec` runs commands, not code. Covert achieves this by instantiating itself via the command line using PHP's CLI executable inside of a `shell_exec` call.
 
 Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
