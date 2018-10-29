@@ -2,8 +2,8 @@
 
 namespace Covert\Tests\Unit;
 
-use Covert\Tests\TestCase;
 use Covert\Operation;
+use Covert\Tests\TestCase;
 
 class CovertTest extends TestCase
 {
@@ -23,7 +23,7 @@ class CovertTest extends TestCase
     {
         $operation = new Operation();
         $operation->setAutoloadFile(false);
-        $operation->setLoggingFile(($loggingFile = sys_get_temp_dir() . '/log.txt'));
+        $operation->setLoggingFile(($loggingFile = sys_get_temp_dir().'/log.txt'));
         $operation->execute(function () {
             $counter = 0;
 
