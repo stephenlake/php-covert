@@ -6,6 +6,13 @@
     Execute code as a background system process for Linux, Mac and Windows without relying on any external dependencies.
 </h6>
 
+<p align="center">
+<a href="https://travis-ci.org/stephenlake/laravel-queryable"><img src="https://img.shields.io/travis/stephenlake/php-covert/master.svg?style=flat-square" alt="Build Status"></a>
+<a href="https://github.styleci.io/repos/149042065"><img src="https://github.styleci.io/repos/154746678/shield?branch=master&style=flat-square" alt="StyleCI"></a>
+<a href="https://github.com/stephenlake/laravel-queryable"><img src="https://img.shields.io/github/release/stephenlake/laravel-queryable.svg?style=flat-square" alt="Release"></a>
+<a href="https://github.com/stephenlake/laravel-queryable/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License"></a>
+</p>
+
 <br>
 
 # PHP Covert
