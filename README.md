@@ -44,7 +44,7 @@ $operation->execute(function() {
 
 // Continue with your app's logic here while your background task is running
 ```
-That's it. Your task is now running in the background as a process. Get the process ID with `$operation->getProcessID()`. Check out the [documentation (coming soon)](https://stephenlake.github.io/php-covert) for further usage and features.
+That's it. Your task is now running in the background as a process. Get the process ID with `$operation->getProcessID()`. Check out the [documentation](https://stephenlake.github.io/php-covert) for further usage and features.
 
 ## Caveats
 - Covert runs background tasks as a new separate PHP process for each operation executed, because of this it is not aware of namespaced imports and currently cannot figure out which classes belong to which namespace, therefore when defining the anonymous function, it's important to remember to use classes' fully qualified namespace otherwise the process will fail, for example:
