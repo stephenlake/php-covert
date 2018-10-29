@@ -9,7 +9,7 @@
 <br>
 
 # PHP Covert
-**PHP Covert** makes running inline code as background tasks in PHP a piece of cake without the need to install external software. Plan your operation and execute it instantly as a background process.
+**PHP Covert** makes running inline code as background tasks in PHP a piece of cake without the need to install external software nor enable additional extensions. Plan your operation and execute it instantly as a background process.
 
 Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
 
