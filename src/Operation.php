@@ -39,6 +39,7 @@ class Operation
     {
         $this->autoload = __DIR__ . '/../../../autoload.php';
         $this->logging = false;
+        $this->processId = null;
     }
 
     /**
