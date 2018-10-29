@@ -164,7 +164,7 @@ class Operation
      */
     public function setAutoloadFile($autoload)
     {
-        if ($autload !== false && !file_exists($autoload)) {
+        if ($autoload !== false && !file_exists($autoload)) {
             throw new Exception("The autoload path '{$autoload}' doesn't exist.");
         }
 
