@@ -9,7 +9,7 @@
 <br>
 
 # PHP Covert
-**PHP Covert** makes running background tasks (including namespaced methods) in PHP a piece of cake without the need to install external software. Plan your operation and execute it instantly as a background process.
+**PHP Covert** makes running inline code as background tasks in PHP a piece of cake without the need to install external software. Plan your operation and execute it instantly as a background process.
 
 Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
 
@@ -37,10 +37,8 @@ $operation->execute(function() {
 ```
 That's it. Your task is now running in the background as a process. Get the process ID with `$operation->getProcessID()`. Check out the [documentation](https://stephenlake.github.io/php-covert) for further usage and features.
 
-## Under the hood
-The goal is to run project code - to instantiate an actual class and execute long-running code as a background task, `shell_exec` runs commands, not code, however we can achieve this by instantiating Covert via the command line using PHP's CLI execution inside of a `shell_exec` call and including the vendor autoload file. 
-
-Generally, it's good practice to have your scripts exit out when complete, however when running a piece of code from an abstract overview using Covert, this may not be possible, therefore when the execution is complete, Covert will again call itself to terminate the process by checking its file cache for the stored process ID and terminate it if it is in an idle state, otherwise clear it from file cache.
+## Caveats
+- Covert runs background tasks as a new separate PHP process for each operation executed, because of this it is not aware of namespaced imports and currently cannot figure out which classes belong to which namespace, therefore when defining the anonymous function, it's important to remember to use classes' fully qualified namespace otherwise the process will fail.  
 
 ## License
 
