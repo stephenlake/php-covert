@@ -41,6 +41,8 @@ $operation->execute(function() {
         echo "I have been running in the background for {$counter} seconds!".PHP_EOL;
      }
 });
+
+// Continue with your app's logic here
 ```
 That's it. Your task is now running in the background as a process. Get the process ID with `$operation->getProcessID()`. Check out the [documentation (coming soon)](https://stephenlake.github.io/php-covert) for further usage and features.
 
