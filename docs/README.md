@@ -34,13 +34,9 @@ $operation->execute(function() {
 });
 ```
 
-## Using Processes
-
 When an operation instance is executed, the system process ID is assigned to it which may be retrieved using `$operation->getProcessId()`, with this you can call a few helper functions:
 
-### Operation Management
-
-#### Check Operation Status
+### Check Operation Status
 
 If you already have the operation instantiation available, you may call the following to check whether it is running or not:
 ```php
@@ -57,7 +53,7 @@ $existingOperation->isRunning();
 
 ```
 
-#### Terminate Operation
+### Terminate Operation
 If for some reason you need to terminate a process before it has finished running you may do so:
 ```php
 use Covert\Operation;
