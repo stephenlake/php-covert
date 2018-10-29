@@ -54,7 +54,11 @@ class Operation
         $temporaryFile = tempnam(sys_get_temp_dir(), 'covert');
 
         $temporaryContent = '<?php'.PHP_EOL.PHP_EOL;
-        $temporaryContent .= "require('$this->autoload');".PHP_EOL.PHP_EOL;
+
+        if ($this->autoload !== false) {
+            $temporaryContent .= "require('$this->autoload');".PHP_EOL.PHP_EOL;
+        }
+
         $temporaryContent .= FunctionReflection::toString($closure).PHP_EOL.PHP_EOL;
         $temporaryContent .= 'unlink(__FILE__);'.PHP_EOL.PHP_EOL;
         $temporaryContent .= 'exit;';
@@ -160,7 +164,7 @@ class Operation
      */
     public function setAutoloadFile($autoload)
     {
-        if (!file_exists($autoload)) {
+        if ($autload !== false && !file_exists($autoload)) {
             throw new Exception("The autoload path '{$autoload}' doesn't exist.");
         }
 
