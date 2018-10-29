@@ -59,4 +59,23 @@ class CovertTest extends TestCase
 
         $this->assertTrue(!$operation->isRunning());
     }
+
+    public function testProcessTerminatesManually()
+    {
+        $operation = new Operation();
+        $operation->setAutoloadFile(false);
+        $operation->execute(function () {
+            sleep(30);
+        });
+
+        $thatOperation = Operation::withId($operation->getProcessId());
+
+        $this->assertTrue($thatOperation->isRunning());
+
+        $thatOperation->kill();
+
+        sleep(1);
+
+        $this->assertTrue(!$thatOperation->isRunning());
+    }
 }
