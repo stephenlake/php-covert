@@ -50,7 +50,7 @@ class Operation
      */
     public static function withId($processId)
     {
-        return new Operation($processId);
+        return new self($processId);
     }
 
     /**
@@ -219,11 +219,11 @@ class Operation
 
         if (OperatingSystem::isWindows()) {
             $pids = shell_exec("wmic process get processid | find \"{$processId}\"");
-            $resource = array_filter(explode(" ", $pids));
+            $resource = array_filter(explode(' ', $pids));
 
             $isRunning = count($resource) > 0 && $processId == reset($resource);
         } else {
-            $isRunning = !!posix_getsid($processId);
+            $isRunning = (bool) posix_getsid($processId);
         }
 
         return $isRunning;
