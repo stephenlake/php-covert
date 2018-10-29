@@ -12,8 +12,4 @@ abstract class TestCase extends BaseTestCase
 
         $this->app->setBasePath(__DIR__.'/../');
     }
-
-    protected function getEnvironmentSetUp($app)
-    {
-    }
 }
