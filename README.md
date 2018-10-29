@@ -42,7 +42,7 @@ $operation->execute(function() {
      }
 });
 
-// Continue with your app's logic here
+// Continue with your app's logic here while your background task is running
 ```
 That's it. Your task is now running in the background as a process. Get the process ID with `$operation->getProcessID()`. Check out the [documentation (coming soon)](https://stephenlake.github.io/php-covert) for further usage and features.
 
