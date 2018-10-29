@@ -25,13 +25,13 @@ use Covert\Operation;
 
 $operation = new Operation();
 $operation->execute(function() {
-  $counter = 0;
+    $counter = 0;
 
-  while($counter < 120) {
-    $counter++;
-    sleep(1);
-    echo "I have been running in the background for {$counter} seconds!".PHP_EOL;
-  }
+    while($counter < 120) {
+        $counter++;
+        sleep(1);
+        echo "I have been running in the background for {$counter} seconds!".PHP_EOL;
+    }
 });
 ```
 
