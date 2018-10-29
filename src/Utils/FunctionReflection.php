@@ -5,7 +5,7 @@ namespace Covert\Utils;
 use Closure;
 use ReflectionFunction;
 
-class Hackery
+class FunctionReflection
 {
     /**
      * Get the string representation of the anonymous function.
@@ -14,7 +14,7 @@ class Hackery
      *
      * @return string
      */
-    public static function closureToString(Closure $closure)
+    public static function toString(Closure $closure)
     {
         $functionStringValue = '';
         $functionReflection = new ReflectionFunction($closure);

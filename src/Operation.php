@@ -3,7 +3,7 @@
 namespace Covert;
 
 use Covert\Utils\OperatingSystem;
-use Covert\Utils\Hackery;
+use Covert\Utils\FunctionReflection;
 use Closure;
 use Exception;
 
@@ -55,7 +55,7 @@ class Operation
 
         $temporaryContent = '<?php'.PHP_EOL.PHP_EOL;
         $temporaryContent .= "require('$this->autoload');".PHP_EOL.PHP_EOL;
-        $temporaryContent .= Hackery::closureToString($closure).PHP_EOL.PHP_EOL;
+        $temporaryContent .= FunctionReflection::toString($closure).PHP_EOL.PHP_EOL;
         $temporaryContent .= "unlink(__FILE__);".PHP_EOL.PHP_EOL;
         $temporaryContent .= "exit;";
 
