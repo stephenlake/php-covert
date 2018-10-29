@@ -3,13 +3,21 @@
 namespace Covert\Utils;
 
 use Closure;
+use ReflectionFunction;
 
 class Hackery
 {
+    /**
+     * Get the string representation of the anonymous function.
+     *
+     * @param Closre $closure The anonymous function.
+     *
+     * @return string
+     */
     public static function closureToString(Closure $closure)
     {
         $functionStringValue = '';
-        $functionReflection = new \ReflectionFunction($closure);
+        $functionReflection = new ReflectionFunction($closure);
 
         $file = file($functionReflection->getFileName());
 

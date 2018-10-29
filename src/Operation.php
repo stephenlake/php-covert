@@ -9,16 +9,45 @@ use Exception;
 
 class Operation
 {
+    /**
+    * The absolute path to the autoload.php file.
+    *
+    * @var string
+    */
     private $autoload;
+
+    /**
+    * The absolute path to the output log file.
+    *
+    * @var bool|string
+    */
     private $logging;
+
+    /**
+    * The process ID (pid) of the background task.
+    *
+    * @var int |null
+    */
     private $processId;
 
+    /**
+     * Create a new operation instance.
+     *
+     * @return self
+     */
     public function __construct()
     {
         $this->autoload = __DIR__ . '/../../../autoload.php';
         $this->logging = false;
     }
 
+    /**
+     * Execute the process.
+     *
+     * @param \Closure $closure The anonyouse function to execute.
+     *
+     * @return void
+     */
     public function execute(Closure $closure)
     {
         $temporaryFile = tempnam(sys_get_temp_dir(), 'covert');
@@ -36,6 +65,13 @@ class Operation
         return $this;
     }
 
+    /**
+     * Check the operating system call appropriate execution method.
+     *
+     * @param string $file The absolute path to the executing file.
+     *
+     * @return void
+     */
     private function executeFile($file)
     {
         if (OperatingSystem::isWindows()) {
@@ -45,6 +81,13 @@ class Operation
         return $this->runCommandForNix($file);
     }
 
+    /**
+     * Execute the shell process for the Windows platform.
+     *
+     * @param string $file The absolute path to the executing file.
+     *
+     * @return void
+     */
     private function runCommandForWindows($file)
     {
         if ($this->logging) {
@@ -71,7 +114,7 @@ class Operation
         );
 
         if (!is_resource($handle)) {
-            throw new \Exception('Could not create a background resource. Try using a better operating system.');
+            throw new Exception('Could not create a background resource. Try using a better operating system.');
         }
 
         $pid = proc_get_status($handle)['pid'];
@@ -87,6 +130,13 @@ class Operation
         return $pid;
     }
 
+    /**
+     * Execute the shell process for the *nix platform.
+     *
+     * @param string $file The absolute path to the executing file.
+     *
+     * @return void
+     */
     private function runCommandForNix($file)
     {
         $cmd = "php {$file} ";
@@ -100,6 +150,13 @@ class Operation
         return (int) shell_exec($cmd);
     }
 
+    /**
+     * Set a custom path to the autoload.php file.
+     *
+     * @param string $file The absolute path to the autoload.php file.
+     *
+     * @return void
+     */
     public function setAutoloadFile($autoload)
     {
         if (!file_exists($autoload)) {
@@ -111,6 +168,13 @@ class Operation
         return $this;
     }
 
+    /**
+     * Set a custom path to the output logging file.
+     *
+     * @param string $file The absolute path to the output logging file.
+     *
+     * @return void
+     */
     public function setLoggingFile($logging)
     {
         $this->logging = $logging;
@@ -118,6 +182,11 @@ class Operation
         return $this;
     }
 
+    /**
+     * Get the process ID of the task running as a system process.
+     *
+     * @return int
+     */
     public function getProcessId()
     {
         return $this->processId;
