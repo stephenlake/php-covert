@@ -31,6 +31,7 @@ $operation->execute(function() {
      while($counter < 120) {
         echo "I have been running in the background for {$counter} seconds!".PHP_EOL;
         sleep(1);
+        $counter++;
      }
 });
 ```
