@@ -29,9 +29,9 @@ $operation->execute(function() {
      $counter = 0;
      
      while($counter < 120) {
-        echo "I have been running in the background for {$counter} seconds!".PHP_EOL;
-        sleep(1);
         $counter++;
+        sleep(1);
+        echo "I have been running in the background for {$counter} seconds!".PHP_EOL;
      }
 });
 ```
