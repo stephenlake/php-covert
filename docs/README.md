@@ -103,7 +103,7 @@ $operation = new Operation();
 $operation->setAutoloadFile(false);
 ```
 
-## Important Caveats
+# Important Caveats
 
 Covert runs background tasks as a new separate PHP process for each operation executed, because of this it is not aware of namespaced imports and currently cannot figure out which classes belong to which namespace, therefore when defining the anonymous function, it's important to remember to use classes' fully qualified namespace otherwise the process will fail, for example:
 
