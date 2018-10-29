@@ -21,7 +21,7 @@ class FunctionReflection
 
         $file = file($functionReflection->getFileName());
 
-        $lastLine = ($functionReflection->getEndLine()-1);
+        $lastLine = ($functionReflection->getEndLine() - 1);
 
         for ($codeline = $functionReflection->getStartLine(); $codeline < $lastLine; $codeline++) {
             $functionStringValue .= $file[$codeline];

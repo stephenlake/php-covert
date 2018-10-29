@@ -2,32 +2,32 @@
 
 namespace Covert;
 
-use Covert\Utils\OperatingSystem;
-use Covert\Utils\FunctionReflection;
 use Closure;
+use Covert\Utils\FunctionReflection;
+use Covert\Utils\OperatingSystem;
 use Exception;
 
 class Operation
 {
     /**
-    * The absolute path to the autoload.php file.
-    *
-    * @var string
-    */
+     * The absolute path to the autoload.php file.
+     *
+     * @var string
+     */
     private $autoload;
 
     /**
-    * The absolute path to the output log file.
-    *
-    * @var bool|string
-    */
+     * The absolute path to the output log file.
+     *
+     * @var bool|string
+     */
     private $logging;
 
     /**
-    * The process ID (pid) of the background task.
-    *
-    * @var int |null
-    */
+     * The process ID (pid) of the background task.
+     *
+     * @var int |null
+     */
     private $processId;
 
     /**
@@ -37,7 +37,7 @@ class Operation
      */
     public function __construct()
     {
-        $this->autoload = __DIR__ . '/../../../autoload.php';
+        $this->autoload = __DIR__.'/../../../autoload.php';
         $this->logging = false;
         $this->processId = null;
     }
@@ -56,8 +56,8 @@ class Operation
         $temporaryContent = '<?php'.PHP_EOL.PHP_EOL;
         $temporaryContent .= "require('$this->autoload');".PHP_EOL.PHP_EOL;
         $temporaryContent .= FunctionReflection::toString($closure).PHP_EOL.PHP_EOL;
-        $temporaryContent .= "unlink(__FILE__);".PHP_EOL.PHP_EOL;
-        $temporaryContent .= "exit;";
+        $temporaryContent .= 'unlink(__FILE__);'.PHP_EOL.PHP_EOL;
+        $temporaryContent .= 'exit;';
 
         file_put_contents($temporaryFile, $temporaryContent);
 
@@ -102,7 +102,7 @@ class Operation
         $desc = [
             ['pipe', 'r'],
             $stdoutPipe,
-            $stderrPipe
+            $stderrPipe,
         ];
 
         $cmd = "START /b php {$file}";
@@ -143,7 +143,7 @@ class Operation
         $cmd = "php {$file} ";
 
         if (!$this->logging) {
-            $cmd .= "> /dev/null 2>&1 & echo $!";
+            $cmd .= '> /dev/null 2>&1 & echo $!';
         } else {
             $cmd .= "> {$this->logging} & echo $!";
         }
