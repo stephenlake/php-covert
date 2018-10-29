@@ -2,166 +2,116 @@
 
 namespace Covert;
 
-use Covert\Internals\Exceptions\ClassNotFoundException;
-use Covert\Internals\Exceptions\MethodNotFoundException;
-use Covert\Internals\FileStore;
-use Covert\Internals\OperatingSystem;
+use Covert\Utils\OperatingSystem;
+use Covert\Utils\Hackery;
+use Closure;
+use Exception;
 
 class Operation
 {
-    private $class;
-    private $className;
-    private $autoloadPath;
-    private $process;
-    private $fileStore;
-
-    private $id;
-    private $name;
+    private $autoload;
+    private $logging;
 
     public function __construct()
     {
-        $this->id = md5(microtime());
-        $this->fileStore = new FileStore();
+        $this->autoload = __DIR__ . '/../../../autoload.php';
+        $this->logging = false;
     }
 
-    public function plan($class)
+    public function execute(Closure $closure)
     {
-        $this->class = $class;
-        $this->name = $class;
+        $temporaryFile = tempnam(sys_get_temp_dir(), 'covert');
 
-        if (!class_exists($this->class)) {
-            throw new ClassNotFoundException("$class does not exist");
-        }
+        $temporaryContent = '<?php'.PHP_EOL.PHP_EOL;
+        $temporaryContent .= "require('$this->autoload');".PHP_EOL.PHP_EOL;
+        $temporaryContent .= Hackery::closureToString($closure).PHP_EOL.PHP_EOL;
+        $temporaryContent .= "unlink(__FILE__);".PHP_EOL.PHP_EOL;
+        $temporaryContent .= "exit;";
 
-        $this->autoloadFrom(__DIR__ . '/../../../autoload.php');
+        file_put_contents($temporaryFile, $temporaryContent);
 
-        $this->classSpace = $class;
-        $this->className = join('', array_slice(explode('\\', $class), -1));
-
-        return $this;
+        return $this->executeFile($temporaryFile);
     }
 
-    public function execute($method)
+    private function executeFile($file)
     {
-        if (!method_exists($this->class, $method)) {
-            throw new MethodNotFoundException("$method does not exist on class $class");
+        if (OperatingSystem::isWindows()) {
+            return $this->runCommandForWindows($file);
         }
 
-        $theCommand = 'php -r "';
-        $theCommand .= "require('$this->autoloadPath');";
-        $theCommand .= "use Covert\\Internals\\InternalOperation;";
-        $theCommand .= "new InternalOperation('$this->classSpace', '$method', '$this->id');";
-        $theCommand .= '" ';
+        return $this->runCommandForNix($file);
+    }
 
-        if (substr(strtoupper(PHP_OS), 0, 3) === 'WIN') {
-            $theCommand .= "&";
+    private function runCommandForWindows($file)
+    {
+        if ($this->logging) {
+            $stdoutPipe = ['file', $this->logging, 'w'];
+            $stderrPipe = ['file', $this->logging, 'w'];
         } else {
-            $theCommand .= "> /dev/null 2>&1 & echo $!";
+            $stdoutPipe = fopen('NUL', 'c');
+            $stderrPipe = fopen('NUL', 'c');
         }
 
-        $this->process = (int) shell_exec($theCommand);
-
-        $this->addProcess();
-
-        return $this;
-    }
-
-    public function autoloadFrom($autoloadPath)
-    {
-        $this->autoloadPath = realpath($autoloadPath);
-
-        if (!file_exists($this->autoloadPath)) {
-            throw new Exception("The autoload path '{$this->autoloadPath}' doesn't exist.");
-        }
-
-        return $this;
-    }
-
-    private function addProcess()
-    {
-        $content = $this->fileStore->read();
-
-        $data = [
-          'pid'   => $this->process,
-          'name'  => $this->name,
-          'start' => time(),
-          'state' => 'active'
+        $desc = [
+            ['pipe', 'r'],
+            $stdoutPipe,
+            $stderrPipe
         ];
 
-        $content['processes']["{$this->id}"] = $data;
+        $cmd = "START /b php {$file}";
 
-        $this->fileStore->write($content);
-    }
+        $handle = proc_open(
+            $cmd,
+            $desc,
+            $pipes,
+            getcwd()
+        );
 
-    private function removeProcess($id)
-    {
-        $content = $this->fileStore->read();
-
-        unset($content['processes']["{$id}"]);
-
-        $this->fileStore->write($content);
-    }
-
-    public function terminate($id)
-    {
-        $content = $this->fileStore->read();
-
-        if (isset($content['processes']["$id"]['pid'])) {
-            $pid = $content['processes']["$id"]['pid'];
-
-            if ($this->isRunning($pid)) {
-                $this->stop($pid);
-            }
-
-            $this->removeProcess($id);
-        }
-    }
-
-    public function list()
-    {
-        $content = $this->fileStore->read();
-
-        foreach ($content['processes'] as $id => $process) {
-            if (!$this->isRunning($process['pid'])) {
-                $this->terminate($id);
-            }
+        if (!is_resource($handle)) {
+            throw new \Exception('Could not create a background resource. Try using a better operating system.');
         }
 
-        return $this->fileStore->read()['processes'];
-    }
+        $pid = proc_get_status($handle)['pid'];
 
-    public function removeAll()
-    {
-        $content = $this->fileStore->read();
-
-        foreach ($content['processes'] as $id => $value) {
-            try {
-                $this->terminate($id);
-            } catch (\Exception $e) {
-            }
+        try {
+            proc_close($handle);
+            $resource = array_filter(explode(' ', shell_exec("wmic process get parentprocessid, processid | find \"$pid\"")));
+            array_pop($resource);
+            $pid = end($resource);
+        } catch (Exception $e) {
         }
 
-        return $this->list();
+        return $pid;
     }
 
-    public function isRunning($pid)
+    private function runCommandForNix($file)
     {
-        if (substr(strtoupper(PHP_OS), 0, 3) === 'WIN') {
-            $res = array_filter(explode(" ", shell_exec("wmic process get processid | find \"{$pid}\"")));
-            return count($res) > 0 && $pid == reset($res);
+        $cmd = "php {$file} ";
+
+        if (!$this->logging) {
+            $cmd .= "> /dev/null 2>&1 & echo $!";
         } else {
-            return !!posix_getsid($pid);
+            $cmd .= "> {$this->logging} & echo $!";
         }
+
+        return (int) shell_exec($cmd);
     }
 
-    public function stop($pid)
+    public function setAutoloadFile($autoload)
     {
-        if (substr(strtoupper(PHP_OS), 0, 3) === 'WIN') {
-            $cmd = "taskkill /pid {$pid} -t -f";
-        } else {
-            $cmd = "kill -9 {$pid}";
+        if (!file_exists($autoload)) {
+            throw new Exception("The autoload path '{$autoload}' doesn't exist.");
         }
 
-        shell_exec($cmd);
+        $this->autoload = $autoload;
+
+        return $this;
+    }
+
+    public function setLoggingFile($logging)
+    {
+        $this->logging = $logging;
+
+        return $this;
     }
 }
