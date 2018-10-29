@@ -217,7 +217,7 @@ class Operation
     {
         $processId = $this->getProcessId();
 
-        if (OperatingSystem::isWinows()) {
+        if (OperatingSystem::isWindows()) {
             $pids = shell_exec("wmic process get processid | find \"{$processId}\"");
             $resource = array_filter(explode(" ", $pids));
 
