@@ -11,6 +11,7 @@ class Operation
 {
     private $autoload;
     private $logging;
+    private $processId;
 
     public function __construct()
     {
@@ -30,7 +31,9 @@ class Operation
 
         file_put_contents($temporaryFile, $temporaryContent);
 
-        return $this->executeFile($temporaryFile);
+        $this->processId = $this->executeFile($temporaryFile);
+
+        return $this;
     }
 
     private function executeFile($file)
@@ -113,5 +116,10 @@ class Operation
         $this->logging = $logging;
 
         return $this;
+    }
+
+    public function getProcessId()
+    {
+        return $this->processId;
     }
 }
