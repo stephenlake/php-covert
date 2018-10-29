@@ -35,11 +35,22 @@ class Operation
      *
      * @return self
      */
-    public function __construct()
+    public function __construct($processId = null)
     {
         $this->autoload = __DIR__.'/../../../autoload.php';
         $this->logging = false;
-        $this->processId = null;
+        $this->processId = $processId;
+    }
+
+    /**
+     * Statically create an instance of an operation from an existing
+     * process ID.
+     *
+     * @return self
+     */
+    public static function withId($processId)
+    {
+        return new Operation($processId);
     }
 
     /**
@@ -195,5 +206,26 @@ class Operation
     public function getProcessId()
     {
         return $this->processId;
+    }
+
+    /**
+     * Returns true if the process ID is still active.
+     *
+     * @return bool
+     */
+    public function isRunning()
+    {
+        $processId = $this->getProcessId();
+
+        if (OperatingSystem::isWinows()) {
+            $pids = shell_exec("wmic process get processid | find \"{$processId}\"");
+            $resource = array_filter(explode(" ", $pids));
+
+            $isRunning = count($resource) > 0 && $processId == reset($resource);
+        } else {
+            $isRunning = !!posix_getsid($processId);
+        }
+
+        return $isRunning;
     }
 }
