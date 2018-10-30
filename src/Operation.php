@@ -26,7 +26,7 @@ class Operation
     /**
      * The process ID (pid) of the background task.
      *
-     * @var int |null
+     * @var int|null
      */
     private $processId;
 
