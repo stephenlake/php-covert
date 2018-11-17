@@ -1,5 +1,5 @@
 <h6 align="center">
-    <img src="https://github.com/stephenlake/php-covert/blob/master/docs/assets/php-covert-banner.png?v=2" width="300"/>
+    <img src="https://raw.githubusercontent.com/stephenlake/php-covert/master/docs/assets/php-covert-banner.png" width="300"/>
 </h6>
 
 <h6 align="center">
