@@ -20,6 +20,9 @@
 
 Made with ❤️ by [Stephen Lake](http://stephenlake.github.io/)
 
+## Disclaimer
+This package does not make use of threading and is **not** intended to replace queues/workers, it's more of a hack than anything and is not the 'proper' way to schedule tasks nor run them in the background. This package was created as an experiment and published due to the frequently asked questions of 'how to run a PHP task in the background'.
+
 ## Getting Started
 Install the package via composer.
 
