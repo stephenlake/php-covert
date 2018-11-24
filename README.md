@@ -11,6 +11,9 @@
 <a href="https://github.styleci.io/repos/154746678"><img src="https://github.styleci.io/repos/154746678/shield?branch=master&style=flat-square" alt="StyleCI"></a>
 <a href="https://github.com/stephenlake/php-covert"><img src="https://img.shields.io/github/release/stephenlake/php-covert.svg?style=flat-square" alt="Release"></a>
 <a href="https://github.com/stephenlake/php-covert/LICENSE.md"><img src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square" alt="License"></a>
+      <a href="https://packagist.org/packages/stephenlake/php-covert">
+        <img src="https://img.shields.io/packagist/dt/stephenlake/php-covert.svg?style=flat-square" alt="">
+    </a>  
 </p>
 
 <br>
