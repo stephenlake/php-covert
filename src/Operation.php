@@ -56,7 +56,7 @@ class Operation
     /**
      * Execute the process.
      *
-     * @param \Closure $closure The anonyouse function to execute.
+     * @param \Closure $closure The anonymous function to execute.
      *
      * @return void
      */
@@ -125,7 +125,7 @@ class Operation
         $handle = proc_open(
             $cmd,
             $desc,
-            $pipes,
+            [],
             getcwd()
         );
 
