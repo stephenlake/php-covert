@@ -10,7 +10,7 @@ class FunctionReflection
     /**
      * Get the string representation of the anonymous function.
      *
-     * @param Closre $closure The anonymous function.
+     * @param \Closure $closure The anonymous function.
      *
      * @return string
      */
@@ -23,8 +23,8 @@ class FunctionReflection
 
         $lastLine = ($functionReflection->getEndLine() - 1);
 
-        for ($codeline = $functionReflection->getStartLine(); $codeline < $lastLine; $codeline++) {
-            $functionStringValue .= $file[$codeline];
+        for ($codeLine = $functionReflection->getStartLine(); $codeLine < $lastLine; $codeLine++) {
+            $functionStringValue .= $file[$codeLine];
         }
 
         return $functionStringValue;
