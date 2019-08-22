@@ -33,12 +33,14 @@ class Operation
     /**
      * Create a new operation instance.
      *
-     * @return self
+     * @param null $processId
+     *
+     * @throws \Exception
      */
     public function __construct($processId = null)
     {
-        $this->autoload = __DIR__.'/../../../autoload.php';
-        $this->logging = false;
+        $this->setAutoloadFile(__DIR__.'/../../../autoload.php');
+        $this->setLoggingFile(false);
         $this->processId = $processId;
     }
 
@@ -46,7 +48,10 @@ class Operation
      * Statically create an instance of an operation from an existing
      * process ID.
      *
+     * @param $processId
+     *
      * @return self
+     * @throws \Exception
      */
     public static function withId($processId)
     {
@@ -58,7 +63,8 @@ class Operation
      *
      * @param \Closure $closure The anonymous function to execute.
      *
-     * @return void
+     * @return self
+     * @throws \ReflectionException
      */
     public function execute(Closure $closure)
     {
@@ -86,7 +92,8 @@ class Operation
      *
      * @param string $file The absolute path to the executing file.
      *
-     * @return void
+     * @return integer
+     * @throws \Exception
      */
     private function executeFile($file)
     {
@@ -102,13 +109,14 @@ class Operation
      *
      * @param string $file The absolute path to the executing file.
      *
-     * @return void
+     * @return integer
+     * @throws \Exception
      */
     private function runCommandForWindows($file)
     {
-        if ($this->logging) {
-            $stdoutPipe = ['file', $this->logging, 'w'];
-            $stderrPipe = ['file', $this->logging, 'w'];
+        if ($this->getLoggingFile()) {
+            $stdoutPipe = ['file', $this->getLoggingFile(), 'w'];
+            $stderrPipe = ['file', $this->getLoggingFile(), 'w'];
         } else {
             $stdoutPipe = fopen('NUL', 'c');
             $stderrPipe = fopen('NUL', 'c');
@@ -151,16 +159,16 @@ class Operation
      *
      * @param string $file The absolute path to the executing file.
      *
-     * @return void
+     * @return integer
      */
     private function runCommandForNix($file)
     {
         $cmd = "php {$file} ";
 
-        if (!$this->logging) {
+        if (!$this->getLoggingFile()) {
             $cmd .= '> /dev/null 2>&1 & echo $!';
         } else {
-            $cmd .= "> {$this->logging} & echo $!";
+            $cmd .= "> {$this->getLoggingFile()} & echo $!";
         }
 
         return (int) shell_exec($cmd);
@@ -169,9 +177,10 @@ class Operation
     /**
      * Set a custom path to the autoload.php file.
      *
-     * @param string $file The absolute path to the autoload.php file.
+     * @param $autoload
      *
-     * @return void
+     * @return self
+     * @throws \Exception
      */
     public function setAutoloadFile($autoload)
     {
@@ -179,7 +188,7 @@ class Operation
             throw new Exception("The autoload path '{$autoload}' doesn't exist.");
         }
 
-        $this->autoload = $autoload;
+        $this->autoload = realpath($autoload);
 
         return $this;
     }
@@ -187,9 +196,9 @@ class Operation
     /**
      * Set a custom path to the output logging file.
      *
-     * @param string $file The absolute path to the output logging file.
+     * @param string|bool $logging The absolute path to the output logging file.
      *
-     * @return void
+     * @return self
      */
     public function setLoggingFile($logging)
     {
@@ -199,9 +208,19 @@ class Operation
     }
 
     /**
+     * Get a custom path to the output logging file.
+     *
+     * @return string|boolean
+     */
+    public function getLoggingFile()
+    {
+        return $this->logging;
+    }
+
+    /**
      * Get the process ID of the task running as a system process.
      *
-     * @return int
+     * @return integer|null
      */
     public function getProcessId()
     {

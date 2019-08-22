@@ -13,6 +13,7 @@ class FunctionReflection
      * @param \Closure $closure The anonymous function.
      *
      * @return string
+     * @throws \ReflectionException
      */
     public static function toString(Closure $closure)
     {
