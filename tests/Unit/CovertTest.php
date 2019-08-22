@@ -10,7 +10,6 @@ class CovertTest extends TestCase
     public function testProcessStarts()
     {
         $operation = new Operation();
-        $operation->setAutoloadFile(false);
         $operation->execute(function () {
             sleep(5);
         });
@@ -22,7 +21,6 @@ class CovertTest extends TestCase
     public function testProcessProducesLogFile()
     {
         $operation = new Operation();
-        $operation->setAutoloadFile(false);
         $operation->setLoggingFile(($loggingFile = sys_get_temp_dir().'/log.txt'));
         $operation->execute(function () {
             $counter = 0;
@@ -48,7 +46,6 @@ class CovertTest extends TestCase
     public function testProcessTerminatesWhenDone()
     {
         $operation = new Operation();
-        $operation->setAutoloadFile(false);
         $operation->execute(function () {
             sleep(2);
         });
@@ -63,7 +60,6 @@ class CovertTest extends TestCase
     public function testProcessTerminatesManually()
     {
         $operation = new Operation();
-        $operation->setAutoloadFile(false);
         $operation->execute(function () {
             sleep(30);
         });

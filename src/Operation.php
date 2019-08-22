@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 
 namespace Covert;
 
@@ -39,7 +40,14 @@ class Operation
      */
     public function __construct($processId = null)
     {
-        $this->setAutoloadFile(__DIR__.'/../../../autoload.php');
+        try {
+            // If we run UnitTests this will throw Exception.
+            $this->setAutoloadFile(__DIR__.'/../../../autoload.php');
+        } catch (Exception $e) {
+            // Set it to false whene running UnitTests
+            $this->setAutoloadFile(false);
+        }
+
         $this->setLoggingFile(false);
         $this->processId = $processId;
     }
@@ -48,13 +56,13 @@ class Operation
      * Statically create an instance of an operation from an existing
      * process ID.
      *
-     * @param $processId
+     * @param int $processId
      *
      * @throws \Exception
      *
      * @return self
      */
-    public static function withId($processId)
+    public static function withId(int $processId): self
     {
         return new self($processId);
     }
@@ -68,10 +76,9 @@ class Operation
      *
      * @return self
      */
-    public function execute(Closure $closure)
+    public function execute(Closure $closure): self
     {
         $temporaryFile = tempnam(sys_get_temp_dir(), 'covert');
-
         $temporaryContent = '<?php'.PHP_EOL.PHP_EOL;
 
         if ($this->autoload !== false) {
@@ -98,7 +105,7 @@ class Operation
      *
      * @return int
      */
-    private function executeFile($file)
+    private function executeFile(string $file): int
     {
         if (OperatingSystem::isWindows()) {
             return $this->runCommandForWindows($file);
@@ -116,7 +123,7 @@ class Operation
      *
      * @return int
      */
-    private function runCommandForWindows($file)
+    private function runCommandForWindows(string $file): int
     {
         if ($this->getLoggingFile()) {
             $stdoutPipe = ['file', $this->getLoggingFile(), 'w'];
@@ -137,7 +144,7 @@ class Operation
         $handle = proc_open(
             $cmd,
             $desc,
-            [],
+            $pipes,
             getcwd()
         );
 
@@ -149,13 +156,13 @@ class Operation
 
         try {
             proc_close($handle);
-            $resource = array_filter(explode(' ', shell_exec("wmic process get parentprocessid, processid | find \"$pid\"")));
+            $resource = array_filter(explode(' ', shell_exec("wmic process get parentprocessid, processid | find \"$pid\"") ?? ''));
             array_pop($resource);
             $pid = end($resource);
         } catch (Exception $e) {
         }
 
-        return $pid;
+        return (int) $pid;
     }
 
     /**
@@ -165,7 +172,7 @@ class Operation
      *
      * @return int
      */
-    private function runCommandForNix($file)
+    private function runCommandForNix(string $file): int
     {
         $cmd = "php {$file} ";
 
@@ -181,19 +188,21 @@ class Operation
     /**
      * Set a custom path to the autoload.php file.
      *
-     * @param $autoload
+     * @param string|bool $autoload The absolute path to autoload.php file
      *
      * @throws \Exception
      *
      * @return self
      */
-    public function setAutoloadFile($autoload)
+    public function setAutoloadFile($autoload): self
     {
-        if ($autoload !== false && !file_exists($autoload)) {
-            throw new Exception("The autoload path '{$autoload}' doesn't exist.");
+        if ($autoload !== false) {
+            if (!$autoload = realpath($autoload)) {
+                throw new Exception("The autoload path '{$autoload}' doesn't exist.");
+            }
         }
 
-        $this->autoload = realpath($autoload);
+        $this->autoload = $autoload;
 
         return $this;
     }
@@ -205,7 +214,7 @@ class Operation
      *
      * @return self
      */
-    public function setLoggingFile($logging)
+    public function setLoggingFile($logging): self
     {
         $this->logging = $logging;
 
@@ -237,12 +246,12 @@ class Operation
      *
      * @return bool
      */
-    public function isRunning()
+    public function isRunning(): bool
     {
         $processId = $this->getProcessId();
 
         if (OperatingSystem::isWindows()) {
-            $pids = shell_exec("wmic process get processid | find \"{$processId}\"");
+            $pids = shell_exec("wmic process get processid | find \"{$processId}\"") ?? '';
             $resource = array_filter(explode(' ', $pids));
 
             $isRunning = count($resource) > 0 && $processId == reset($resource);
@@ -258,7 +267,7 @@ class Operation
      *
      * @return self
      */
-    public function kill()
+    public function kill(): self
     {
         if ($this->isRunning()) {
             $processId = $this->getProcessId();
