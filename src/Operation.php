@@ -50,8 +50,9 @@ class Operation
      *
      * @param $processId
      *
-     * @return self
      * @throws \Exception
+     *
+     * @return self
      */
     public static function withId($processId)
     {
@@ -63,8 +64,9 @@ class Operation
      *
      * @param \Closure $closure The anonymous function to execute.
      *
-     * @return self
      * @throws \ReflectionException
+     *
+     * @return self
      */
     public function execute(Closure $closure)
     {
@@ -92,8 +94,9 @@ class Operation
      *
      * @param string $file The absolute path to the executing file.
      *
-     * @return integer
      * @throws \Exception
+     *
+     * @return int
      */
     private function executeFile($file)
     {
@@ -109,8 +112,9 @@ class Operation
      *
      * @param string $file The absolute path to the executing file.
      *
-     * @return integer
      * @throws \Exception
+     *
+     * @return int
      */
     private function runCommandForWindows($file)
     {
@@ -159,7 +163,7 @@ class Operation
      *
      * @param string $file The absolute path to the executing file.
      *
-     * @return integer
+     * @return int
      */
     private function runCommandForNix($file)
     {
@@ -179,8 +183,9 @@ class Operation
      *
      * @param $autoload
      *
-     * @return self
      * @throws \Exception
+     *
+     * @return self
      */
     public function setAutoloadFile($autoload)
     {
@@ -210,7 +215,7 @@ class Operation
     /**
      * Get a custom path to the output logging file.
      *
-     * @return string|boolean
+     * @return string|bool
      */
     public function getLoggingFile()
     {
@@ -220,7 +225,7 @@ class Operation
     /**
      * Get the process ID of the task running as a system process.
      *
-     * @return integer|null
+     * @return int|null
      */
     public function getProcessId()
     {
