@@ -31,7 +31,7 @@ class Operation
     private $processId;
 
     /**
-     * Command to run PHP
+     * Command to run PHP.
      *
      * @var string
      */
@@ -127,7 +127,7 @@ class Operation
             $stderrPipe,
         ];
 
-        $cmd = "START /b ".$this->getCommand()." {$file}";
+        $cmd = 'START /b '.$this->getCommand()." {$file}";
 
         $handle = proc_open(
             $cmd,
@@ -206,7 +206,7 @@ class Operation
     }
 
     /**
-     * Get command to run PHP
+     * Get command to run PHP.
      *
      * @return string
      */
@@ -216,7 +216,7 @@ class Operation
     }
 
     /**
-     * Set command to run PHP
+     * Set command to run PHP.
      *
      * @param string $command
      */
