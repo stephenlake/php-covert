@@ -33,6 +33,13 @@ class Operation
     private $processId;
 
     /**
+     * Command to run PHP.
+     *
+     * @var string
+     */
+    private $command = 'php';
+
+    /**
      * Create a new operation instance.
      *
      * @param null $processId
@@ -140,7 +147,7 @@ class Operation
             $stderrPipe,
         ];
 
-        $cmd = "START /b php {$file}";
+        $cmd = 'START /b '.$this->getCommand()." {$file}";
 
         $handle = proc_open(
             $cmd,
@@ -175,7 +182,7 @@ class Operation
      */
     private function runCommandForNix(string $file): int
     {
-        $cmd = "php {$file} ";
+        $cmd = $this->getCommand()." {$file} ";
 
         if (!$this->getLoggingFile()) {
             $cmd .= '> /dev/null 2>&1 & echo $!';
@@ -230,6 +237,26 @@ class Operation
     public function getLoggingFile()
     {
         return $this->logging;
+    }
+
+    /**
+     * Get command to run PHP.
+     *
+     * @return string
+     */
+    public function getCommand()
+    {
+        return $this->command;
+    }
+
+    /**
+     * Set command to run PHP.
+     *
+     * @param string $command
+     */
+    public function setCommand($command)
+    {
+        $this->command = $command;
     }
 
     /**

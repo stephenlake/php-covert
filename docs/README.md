@@ -103,6 +103,13 @@ $operation = new Operation();
 $operation->setAutoloadFile(false);
 ```
 
+## Specify custom command to run PHP
+You may need to run the PHP interpreter with a command other than 'php' or set some parameters when executing PHP. In this case You can set custom command to run it:
+```php
+$operation = new Operation();
+$operation->setCommand('/usr/local/bin/php73 -d memory_limit="512M"');
+```
+
 # Important Caveats
 
 Covert runs background tasks as a new separate PHP process for each operation executed, because of this it is not aware of namespaced imports and currently cannot figure out which classes belong to which namespace, therefore when defining the anonymous function, it's important to remember to use classes' fully qualified namespace otherwise the process will fail, for example:
