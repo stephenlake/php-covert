@@ -88,6 +88,6 @@ class CovertTest extends TestCase
 
         $result = file_get_contents($loggingFile);
 
-        $this->assertTrue($result == $test);
+        $this->assertSame($result, $test);
     }
 }
