@@ -74,4 +74,20 @@ class CovertTest extends TestCase
 
         $this->assertTrue(!$thatOperation->isRunning());
     }
+
+    public function testProcessHandlePassedVariables()
+    {
+        $operation = new Operation();
+        $operation->setLoggingFile(($loggingFile = sys_get_temp_dir().'/log.txt'));
+        $test = 'TEST';
+        $operation->execute(function () use ($test) {
+            echo $test;
+        });
+
+        sleep(1);
+
+        $result = file_get_contents($loggingFile);
+
+        $this->assertTrue($result == $test);
+    }
 }

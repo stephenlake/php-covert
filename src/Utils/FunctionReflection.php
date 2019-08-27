@@ -21,6 +21,12 @@ class FunctionReflection
         $functionStringValue = '';
         $functionReflection = new ReflectionFunction($closure);
 
+        $vars = $functionReflection->getStaticVariables();
+
+        foreach ($vars as $name => $value) {
+            $functionStringValue .= '$' . $name . ' = unserialize(\'' . serialize($value) . '\');'.PHP_EOL;
+        }
+
         $file = file($functionReflection->getFileName());
 
         $lastLine = ($functionReflection->getEndLine() - 1);

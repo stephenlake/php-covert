@@ -164,7 +164,7 @@ class Operation
 
         try {
             proc_close($handle);
-            $resource = array_filter(explode(' ', shell_exec("wmic process get parentprocessid, processid | find \"$pid\"") ?? ''));
+            $resource = array_filter(explode(' ', shell_exec("wmic process get parentprocessid, processid | find /i \"$pid\"") ?? ''));
             array_pop($resource);
             $pid = end($resource);
         } catch (Exception $e) {
