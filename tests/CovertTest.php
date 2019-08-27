@@ -55,7 +55,6 @@ class CovertTest extends TestCase
         sleep(4);
 
         $this->assertFalse($operation->isRunning());
-
     }
 
     public function testProcessTerminatesManually()

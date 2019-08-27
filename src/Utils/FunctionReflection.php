@@ -26,7 +26,7 @@ class FunctionReflection
         $vars = $functionReflection->getStaticVariables();
 
         foreach ($vars as $name => $value) {
-            $functionStringValue .= '$' . $name . ' = unserialize(\'' . serialize($value) . '\');'.PHP_EOL;
+            $functionStringValue .= '$'.$name.' = unserialize(\''.serialize($value).'\');'.PHP_EOL;
         }
 
         $file = file($functionReflection->getFileName());
