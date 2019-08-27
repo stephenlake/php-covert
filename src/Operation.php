@@ -16,7 +16,7 @@ class Operation
      *
      * @var string
      */
-    private $autoload;
+    private $autoload = '';
 
     /**
      * The absolute path to the output log file.
@@ -42,7 +42,7 @@ class Operation
     /**
      * Create a new operation instance.
      *
-     * @param null $processId
+     * @param null|int $processId
      *
      * @throws \Exception
      */
@@ -89,7 +89,7 @@ class Operation
         $temporaryFile = tempnam(sys_get_temp_dir(), 'covert');
         $temporaryContent = '<?php'.PHP_EOL.PHP_EOL;
 
-        if ($this->autoload !== false) {
+        if (!empty($this->autoload)) {
             $temporaryContent .= "require('$this->autoload');".PHP_EOL.PHP_EOL;
         }
 
@@ -198,13 +198,14 @@ class Operation
      */
     public function setAutoloadFile($autoload): self
     {
-        if ($autoload !== false) {
+        if (is_string($autoload)) {
             if (!$autoload = realpath($autoload)) {
                 throw new Exception("The autoload path '{$autoload}' doesn't exist.");
             }
+
+            $this->autoload = $autoload;
         }
 
-        $this->autoload = $autoload;
 
         return $this;
     }
