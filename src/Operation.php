@@ -206,7 +206,6 @@ class Operation
             $this->autoload = $autoload;
         }
 
-
         return $this;
     }
 
