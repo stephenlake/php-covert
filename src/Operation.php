@@ -161,14 +161,8 @@ class Operation
         }
 
         $pid = proc_get_status($handle)['pid'];
-
-        try {
-            proc_close($handle);
-            $resource = array_filter(explode(' ', shell_exec("wmic process get parentprocessid, processid | find /i \"$pid\"") ?? ''));
-            array_pop($resource);
-            $pid = end($resource);
-        } catch (Exception $e) {
-        }
+        proc_close($handle);
+        $pid = shell_exec('powershell.exe -Command "(Get-CimInstance -Class Win32_Process -Filter \'parentprocessid='.$pid.'\').processid"');
 
         return (int) $pid;
     }
@@ -279,10 +273,7 @@ class Operation
         $processId = $this->getProcessId();
 
         if (OperatingSystem::isWindows()) {
-            $pids = shell_exec("wmic process get processid | find \"{$processId}\"") ?? '';
-            $resource = array_filter(explode(' ', $pids));
-
-            $isRunning = count($resource) > 0 && $processId == reset($resource);
+            $isRunning = !empty(shell_exec('powershell.exe -Command "Get-CimInstance -Class Win32_Process -Filter \'processid='.$processId.'\'"'));
         } else {
             $isRunning = (bool) posix_getsid($processId);
         }

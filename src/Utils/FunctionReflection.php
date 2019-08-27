@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Covert\Utils;
 
 use Closure;
@@ -16,7 +18,7 @@ class FunctionReflection
      *
      * @return string
      */
-    public static function toString(Closure $closure)
+    public static function toString(Closure $closure): string
     {
         $functionStringValue = '';
         $functionReflection = new ReflectionFunction($closure);

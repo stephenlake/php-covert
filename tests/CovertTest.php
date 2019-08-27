@@ -3,7 +3,7 @@
 namespace Covert\Tests\Unit;
 
 use Covert\Operation;
-use Covert\Tests\TestCase;
+use PHPUnit\Framework\TestCase;
 
 class CovertTest extends TestCase
 {
@@ -54,7 +54,8 @@ class CovertTest extends TestCase
 
         sleep(4);
 
-        $this->assertTrue(!$operation->isRunning());
+        $this->assertFalse($operation->isRunning());
+
     }
 
     public function testProcessTerminatesManually()
@@ -72,7 +73,7 @@ class CovertTest extends TestCase
 
         sleep(1);
 
-        $this->assertTrue(!$thatOperation->isRunning());
+        $this->assertFalse($thatOperation->isRunning());
     }
 
     public function testProcessHandlePassedVariables()
