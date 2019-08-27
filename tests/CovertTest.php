@@ -41,6 +41,8 @@ class CovertTest extends TestCase
         $loggingFileHasContent = count(file($loggingFile)) > 2;
 
         $this->assertTrue($loggingFileHasContent);
+
+        unlink($loggingFile);
     }
 
     public function testProcessTerminatesWhenDone()
@@ -89,5 +91,7 @@ class CovertTest extends TestCase
         $result = file_get_contents($loggingFile);
 
         $this->assertSame($result, $test);
+
+        unlink($loggingFile);
     }
 }
