@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Covert\Utils;
 
 use Closure;
@@ -16,10 +18,16 @@ class FunctionReflection
      *
      * @return string
      */
-    public static function toString(Closure $closure)
+    public static function toString(Closure $closure): string
     {
         $functionStringValue = '';
         $functionReflection = new ReflectionFunction($closure);
+
+        $vars = $functionReflection->getStaticVariables();
+
+        foreach ($vars as $name => $value) {
+            $functionStringValue .= '$'.$name.' = unserialize(\''.serialize($value).'\');'.PHP_EOL;
+        }
 
         $file = file($functionReflection->getFileName());
 
