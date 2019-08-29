@@ -78,4 +78,13 @@ class CovertTest extends TestCase
 
         $this->assertTrue(!$thatOperation->isRunning());
     }
+
+    public function testCommand()
+    {
+        $operation = new Operation();
+
+        $operation->setCommand('php -d memory_limit="256M"');
+
+        $this->assertEquals('php -d memory_limit="256M"', $operation->getCommand());
+    }
 }
