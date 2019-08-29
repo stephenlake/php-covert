@@ -1,3 +1,10 @@
+# Ignore auto-generated files
 /vendor
+/build
 composer.lock
 .phpunit.result.cache
+
+# Ignore IDE
+.project
+.vscode/
+.idea/

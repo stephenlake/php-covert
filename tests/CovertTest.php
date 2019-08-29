@@ -94,4 +94,13 @@ class CovertTest extends TestCase
 
         unlink($loggingFile);
     }
+
+    public function testCommand()
+    {
+        $operation = new Operation();
+
+        $operation->setCommand('php -d memory_limit="256M"');
+
+        $this->assertEquals('php -d memory_limit="256M"', $operation->getCommand());
+    }
 }
