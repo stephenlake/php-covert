@@ -94,7 +94,7 @@ class CovertTest extends TestCase
         $this->assertSame($result, $test, 'Test value was not handled properly.');
         unlink($loggingFile);
 
-        $test = '"TEST"'."'Test'"."\"".'\'';
+        $test = '"TEST"'."'Test'";
         $operation->execute(function () use ($test) {
             echo $test;
         });

@@ -40,7 +40,7 @@ class Operation
     private $command = 'php';
 
     /**
-     * Information is process running
+     * Information is process running.
      *
      * @var bool
      */
@@ -286,9 +286,9 @@ class Operation
         if ($this->isRunning === null || $this->isRunning === true) {
             if ($processId = $this->getProcessId()) {
                 if (OperatingSystem::isWindows()) {
-                    $this->isRunning = !empty(shell_exec('powershell.exe -Command "Get-CimInstance -Class Win32_Process -Filter \'processid=' . $processId . '\'"'));
+                    $this->isRunning = !empty(shell_exec('powershell.exe -Command "Get-CimInstance -Class Win32_Process -Filter \'processid='.$processId.'\'"'));
                 } else {
-                    $this->isRunning = (bool)posix_getsid($processId);
+                    $this->isRunning = (bool) posix_getsid($processId);
                 }
             }
         }
