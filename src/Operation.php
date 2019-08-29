@@ -281,7 +281,7 @@ class Operation
     {
         /*
          * If we do not check it before or last time process was running,
-         * check it current status otherwise it was running and was ended.
+         * check its current status, otherwise it was running and was ended.
          */
         if ($this->isRunning === null || $this->isRunning === true) {
             if ($processId = $this->getProcessId()) {

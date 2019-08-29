@@ -11,14 +11,14 @@ class CovertTest extends TestCase
     {
         $operation = new Operation();
 
-        $this->assertFalse($operation->isRunning(), 'Process is running while is not been execute yet.');
+        $this->assertFalse($operation->isRunning(), 'Process is running, while is not been executed yet.');
 
         $operation->execute(function () {
             sleep(5);
         });
 
-        $this->assertTrue(!is_null($operation->getProcessId()), 'Process ID was not found while process is running.');
-        $this->assertTrue($operation->isRunning(), 'Process is not running while it should be running.');
+        $this->assertTrue(!is_null($operation->getProcessId()), 'Process ID was not found, while process is running.');
+        $this->assertTrue($operation->isRunning(), 'Process is not running, while it should be running.');
     }
 
     public function testProcessProducesLogFile()
@@ -37,13 +37,13 @@ class CovertTest extends TestCase
 
         $loggingFileExists = file_exists($loggingFile);
 
-        $this->assertTrue($loggingFileExists, 'Log file does NOT exists while it should exists.');
+        $this->assertTrue($loggingFileExists, 'Log file does NOT exists, while it should exists.');
 
         sleep(4);
 
         $loggingFileHasContent = count(file($loggingFile)) > 2;
 
-        $this->assertTrue($loggingFileHasContent, 'Log file does NOT have any content while it should have some.');
+        $this->assertTrue($loggingFileHasContent, 'Log file does NOT have any content, while it should have some.');
 
         unlink($loggingFile);
     }
@@ -55,11 +55,11 @@ class CovertTest extends TestCase
             sleep(2);
         });
 
-        $this->assertTrue($operation->isRunning(), 'Process is not running while it should be running.');
+        $this->assertTrue($operation->isRunning(), 'Process is not running, while it should be running.');
 
         sleep(4);
 
-        $this->assertFalse($operation->isRunning(), 'Process is running while it should be ended.');
+        $this->assertFalse($operation->isRunning(), 'Process is running, while it should be ended.');
     }
 
     public function testProcessTerminatesManually()
@@ -71,13 +71,13 @@ class CovertTest extends TestCase
 
         $thatOperation = Operation::withId($operation->getProcessId());
 
-        $this->assertTrue($thatOperation->isRunning(), 'Process is not running while it should be running.');
+        $this->assertTrue($thatOperation->isRunning(), 'Process is not running, while it should be running.');
 
         $thatOperation->kill();
 
         sleep(1);
 
-        $this->assertFalse($thatOperation->isRunning(), 'Process is running while it should be terminated manually.');
+        $this->assertFalse($thatOperation->isRunning(), 'Process is running ,while it should be terminated manually.');
     }
 
     public function testProcessHandlePassedVariables()
@@ -111,6 +111,6 @@ class CovertTest extends TestCase
 
         $operation->setCommand('php -d memory_limit="256M"');
 
-        $this->assertEquals('php -d memory_limit="256M"', $operation->getCommand());
+        $this->assertEquals('php -d memory_limit="256M"', $operation->getCommand(), 'Command was not set properly.');
     }
 }
