@@ -26,7 +26,8 @@ class FunctionReflection
         $vars = $functionReflection->getStaticVariables();
 
         foreach ($vars as $name => $value) {
-            $functionStringValue .= '$'.$name.' = unserialize(\''.serialize($value).'\');'.PHP_EOL;
+            $value = base64_encode(serialize($value));
+            $functionStringValue .= '$'.$name.' = unserialize(base64_decode(\''.$value.'\'));'.PHP_EOL;
         }
 
         $file = file($functionReflection->getFileName());

@@ -40,6 +40,13 @@ class Operation
     private $command = 'php';
 
     /**
+     * Information is process running.
+     *
+     * @var bool
+     */
+    private $isRunning = null;
+
+    /**
      * Create a new operation instance.
      *
      * @param null|int $processId
@@ -115,6 +122,8 @@ class Operation
      */
     private function executeFile(string $file): int
     {
+        $this->isRunning = true;
+
         if (OperatingSystem::isWindows()) {
             return $this->runCommandForWindows($file);
         }
@@ -270,15 +279,21 @@ class Operation
      */
     public function isRunning(): bool
     {
-        $processId = $this->getProcessId();
-
-        if (OperatingSystem::isWindows()) {
-            $isRunning = !empty(shell_exec('powershell.exe -Command "Get-CimInstance -Class Win32_Process -Filter \'processid='.$processId.'\'"'));
-        } else {
-            $isRunning = (bool) posix_getsid($processId);
+        /*
+         * If we do not check it before or last time process was running,
+         * check its current status, otherwise it was running and was ended.
+         */
+        if ($this->isRunning === null || $this->isRunning === true) {
+            if ($processId = $this->getProcessId()) {
+                if (OperatingSystem::isWindows()) {
+                    $this->isRunning = !empty(shell_exec('powershell.exe -Command "Get-CimInstance -Class Win32_Process -Filter \'processid='.$processId.'\'"'));
+                } else {
+                    $this->isRunning = (bool) posix_getsid($processId);
+                }
+            }
         }
 
-        return $isRunning;
+        return (bool) $this->isRunning;
     }
 
     /**
